@@ -19,8 +19,8 @@ RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # These commands install the cv2 dependencies that are normally present on the local machine
-# RUN apt-get update
-# RUN apt-get install ffmpeg libsm6 libxext6  -y
+RUN apt-get update
+RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 # Install pip requirements
 COPY requirements.txt .
