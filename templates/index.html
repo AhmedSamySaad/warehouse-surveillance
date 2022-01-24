@@ -73,6 +73,8 @@
   <script type="text/javascript" async="" src="assets/js/analytics.js"></script>
   <script type="text/javascript" async="" src="assets/js/js(1)"></script>
   <script charset="utf-8" src="assets/js/chunk-1b51ec2d.ab23d2f7.js"></script>
+  <script src="assets/js/main_script.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="assets/css/chunk-be327f24.f828a459.css">
   <script charset="utf-8" src="assets/js/chunk-be327f24.ef036adc.js"></script>
   <link href="https://www.googletagmanager.com/" rel="preconnect">
@@ -211,22 +213,18 @@
               <p data-v-09b34c2b="">Drag and drop your image here, or</p>
               <p data-v-09b34c2b=""><span data-v-09b34c2b="" class="dialogue-link">open</span> from your computer </p>
             </div>
-          </div><input data-v-2091db72="" type="file" accept="image/*" style="display: none;">
+          </div><input data-v-2091db72="" id="upload" type="file" accept="image/*" style="display: none;">
         </div>
         <!---->
       </div>
       <div data-v-b505f55a="" data-v-d59885ee="" class="col">
-        <form data-v-b505f55a="" data-v-d59885ee="" action="https://ultralytics.com/yolov5">
+        <form id="form-data" data-v-b505f55a="" data-v-d59885ee="">
           <div data-v-b505f55a="" data-v-d59885ee="" class="selects"><label data-v-b505f55a="" data-v-d59885ee=""> Model
               <select data-v-b505f55a="" data-v-d59885ee="" name="model" id="">
-                <option data-v-b505f55a="" data-v-d59885ee="" value="yolov5s">YOLOv5s</option>
-                <option data-v-b505f55a="" data-v-d59885ee="" value="yolov5m">YOLOv5m</option>
                 <option data-v-b505f55a="" data-v-d59885ee="" value="yolov5s6">YOLOv5s6</option>
-                <option data-v-b505f55a="" data-v-d59885ee="" value="yolov5m6">YOLOv5m6</option>
               </select></label><label data-v-b505f55a="" data-v-d59885ee=""> Image Size <select data-v-b505f55a=""
                 data-v-d59885ee="" name="size" id="">
-                <option data-v-b505f55a="" data-v-d59885ee="" value="320">320</option>
-                <option data-v-b505f55a="" data-v-d59885ee="" value="640">640</option>
+                <option data-v-b505f55a="" data-v-d59885ee="" value="1280">1280</option>
                 <!---->
               </select></label></div>
           <div data-v-b505f55a="" data-v-d59885ee="" class="range"><label data-v-b505f55a="" data-v-d59885ee="">
@@ -243,15 +241,8 @@
                 data-v-b505f55a="" data-v-d59885ee="" class="bubble" style="left: calc(47.3684% + 0.736842px);"> 0.45
               </output></div>
           </div>
+        <button type="button" id="detect">Detect</button>
         </form>
-        <p data-v-b505f55a="" data-v-d59885ee="" class="f-large">Example Images</p>
-        <div data-v-b505f55a="" data-v-d59885ee="" class="demo-images">
-          <div data-v-b505f55a="" data-v-d59885ee="" class="image"><img data-v-b505f55a="" data-v-d59885ee=""
-              src="assets/img/bus.jpg" alt="Bus" draggable="false"></div>
-          <div data-v-b505f55a="" data-v-d59885ee="" class="image"><img data-v-b505f55a="" data-v-d59885ee=""
-              src="assets/img/zidane.jpg" alt="Zidane" draggable="false"></div>
-          <div data-v-b505f55a="" data-v-d59885ee="" class="image"><img data-v-b505f55a="" data-v-d59885ee=""
-              src="assets/img/Millenial-at-work.jpg" alt="Zidane" draggable="false"></div>
         </div>
       </div>
     </div>

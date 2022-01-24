@@ -1,64 +1,42 @@
-# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+# For more information, please refer to https://aka.ms/vscode-docker-python
+# Added platform argument because tensorflow doesn't support linux/arm64 till now 22-01-2022
+FROM python:3.8-slim
 
-# Start FROM Nvidia PyTorch image https://ngc.nvidia.com/catalog/containers/nvidia:pytorch
-FROM nvcr.io/nvidia/pytorch:21.10-py3
+EXPOSE 5000
 
-# Install linux packages
-RUN apt update && apt install -y zip htop screen libgl1-mesa-glx
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
 
-# Install python dependencies
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED=1
+
+# Configuring Virtual Environment
+# The following two commands for Linux Docker containers that don't have venv installed
+# RUN apt-get update
+# RUN apt install python3.8-venv -y
+ENV VIRTUAL_ENV=/opt/venv
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# These commands install the cv2 dependencies that are normally present on the local machine
+# RUN apt-get update
+# RUN apt-get install ffmpeg libsm6 libxext6  -y
+
+# Install pip requirements
 COPY requirements.txt .
-RUN python -m pip install --upgrade pip
-RUN pip uninstall -y nvidia-tensorboard nvidia-tensorboard-plugin-dlprof
-RUN pip install --no-cache -r requirements.txt albumentations coremltools onnx gsutil notebook numpy Pillow wandb>=0.12.2
-RUN pip install --no-cache torch==1.10.1+cu113 torchvision==0.11.2+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
-# RUN pip install --no-cache -U torch torchvision
+RUN python -m pip install -r requirements.txt
+# The following command for forcing the reinstallation of tensorflow to work without AVX instruction set so that arm64 emulation can work correctly
+# RUN python -m pip install --force-reinstall https://tf.novaal.de/barcelona/tensorflow-2.7.0-cp38-cp38-linux_x86_64.whl
 
-# Create working directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /app
+COPY . /app
 
-# Copy contents
-COPY . /usr/src/app
+# Creates a non-root user with an explicit UID and adds permission to access the /app folder
+# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
+# Commented the following two lines to run as a root user
+# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+# USER appuser
 
-# Downloads to user config dir
-ADD https://ultralytics.com/assets/Arial.ttf /root/.config/Ultralytics/
-
-# Set environment variables
-# ENV HOME=/usr/src/app
-
-
-# Usage Examples -------------------------------------------------------------------------------------------------------
-
-# Build and Push
-# t=ultralytics/yolov5:latest && sudo docker build -t $t . && sudo docker push $t
-
-# Pull and Run
-# t=ultralytics/yolov5:latest && sudo docker pull $t && sudo docker run -it --ipc=host --gpus all $t
-
-# Pull and Run with local directory access
-# t=ultralytics/yolov5:latest && sudo docker pull $t && sudo docker run -it --ipc=host --gpus all -v "$(pwd)"/datasets:/usr/src/datasets $t
-
-# Kill all
-# sudo docker kill $(sudo docker ps -q)
-
-# Kill all image-based
-# sudo docker kill $(sudo docker ps -qa --filter ancestor=ultralytics/yolov5:latest)
-
-# Bash into running container
-# sudo docker exec -it 5a9b5863d93d bash
-
-# Bash into stopped container
-# id=$(sudo docker ps -qa) && sudo docker start $id && sudo docker exec -it $id bash
-
-# Clean up
-# docker system prune -a --volumes
-
-# Update Ubuntu drivers
-# https://www.maketecheasier.com/install-nvidia-drivers-ubuntu/
-
-# DDP test
-# python -m torch.distributed.run --nproc_per_node 2 --master_port 1 train.py --epochs 3
-
-# GCP VM from Image
-# docker.io/ultralytics/yolov5:latest
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+# Added timeout 600 because the inference is taking too long and the workers fail before returning a result
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "600", "app:app"]
