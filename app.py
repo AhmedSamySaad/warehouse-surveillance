@@ -81,6 +81,6 @@ def inference():
 def send_result(filename,rand_id):
     return send_from_directory("./runs/detect/exp", filename, as_attachment=True)
 
-
+#test
 if __name__ == '__main__':
     app.run()
